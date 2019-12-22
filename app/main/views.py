@@ -4,9 +4,11 @@ from .forms import NameForm
 from ..models.Role import Role
 from ..models.User import User
 from .. import db
+from flask_login import login_required
 from datetime import datetime
 
 @main.route('/', methods=['GET', 'POST'])
+@login_required
 def index():
   name = None
   form = NameForm()

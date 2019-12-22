@@ -9,6 +9,8 @@ bootstrap = Bootstrap()
 db = SQLAlchemy()
 mail = Mail()
 login_manager = LoginManager()
+
+# Anytime a user tries to access an unauthorized page, he/she is redirected to login_manager.login_view
 login_manager.login_view = 'auth.login'
 
 def create_app(config_name):
@@ -26,6 +28,6 @@ def create_app(config_name):
   bootstrap.init_app(app)
   db.init_app(app)
   mail.init_app(app)
-  login.init_app(app)
+  login_manager.init_app(app)
 
   return app

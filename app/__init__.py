@@ -2,12 +2,13 @@ from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
+from flask_login import LoginManager
 from config import config
 
 bootstrap = Bootstrap()
 db = SQLAlchemy()
 mail = Mail()
-
+login = LoginManager()
 
 def create_app(config_name):
   if not config_name in config:
@@ -24,5 +25,6 @@ def create_app(config_name):
   bootstrap.init_app(app)
   db.init_app(app)
   mail.init_app(app)
+  login.init_app(app)
 
   return app

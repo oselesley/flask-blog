@@ -1,10 +1,12 @@
 from flask import redirect, url_for, render_template, flash
 from . import auth
 from .forms import LoginForm
+from flask_login import login_required
 from ..models.User import User
 
 
 @auth.route('/login', methods=['GET', 'POST'])
+@login_required
 def login():
   form = LoginForm()
   if form.validate_on_submit():

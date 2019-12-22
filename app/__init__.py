@@ -8,7 +8,8 @@ from config import config
 bootstrap = Bootstrap()
 db = SQLAlchemy()
 mail = Mail()
-login = LoginManager()
+login_manager = LoginManager()
+login_manager.login_view = 'auth.login'
 
 def create_app(config_name):
   if not config_name in config:

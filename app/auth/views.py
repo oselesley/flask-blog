@@ -36,6 +36,7 @@ def signup():
   form = SignupForm()
   if form.validate_on_submit():
     user = User(name=form.name.data, email=form.email.data, password=form.password.data)
+    token = user.generate_confirmation_token()
     db.session.add(user)
     db.session.commit()
     login_user(user=user)

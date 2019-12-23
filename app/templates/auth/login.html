@@ -4,5 +4,9 @@
   <div class='container'>
     <h1 class='display-4 mt-5 mb-4'>Login</h1>
     {{wtf.quick_form(form)}}
+    <p>
+      <span class="lead">New User?</span>
+      <a href="{{url_for('auth.signup')}}">Click here to register</a>
+    </p>
   </div>
 {% endblock  %}

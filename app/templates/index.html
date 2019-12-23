@@ -3,7 +3,7 @@
 
 
 {% block page_content %}
-   <h1 class='page-header mt-5'> {{super()}} Hello, {% if name %} {{name | title }} {% else %} Stranger {% endif %} </h1>
+   <h1 class='page-header mt-5'> {{super()}} Hello, {% if current_user.is_authenticated %} {{current_user.name | title }} {% else %} Stranger {% endif %} </h1>
    <h2 class="display-4" style='font-size: 1.1rem; margin-bottom: 1rem'>{% if not known %}PLeased to meet you {% else %} Happy to meet you again {{name}}{% endif %}</h2>
         {{wtf.quick_form(form)}}
 {% endblock %}

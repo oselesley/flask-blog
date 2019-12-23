@@ -20,10 +20,6 @@ def index():
       flash('Looks like you\'ve changed your name')
     print(user)
     if not user:
-      print(form.email.data)
-      user = User(name=form.name.data, email= form.email.data, role_id=3)
-      db.session.add(user)
-      db.session.commit()
       session['known'] = False
       # send_mail(form.email.data, 'New User', 'mail/new_user', user=user)
     else:

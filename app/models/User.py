@@ -20,7 +20,7 @@ class User(UserMixin, db.Model):
   @property
   def password(self):
     raise LookupError('password is not a readable attribute!')
-  
+
   @password.setter
   def password(self, password):
     self.__password_hash = generate_password_hash(password)
@@ -34,13 +34,14 @@ class User(UserMixin, db.Model):
 
   def generate_confirmation_token(self, expiration=3600):
     s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
-    return self.s.dumps({'confirm': self.id}).decode('utf-8')
+    return s.dumps({'confirm': self.id}).decode('utf-8')
 
   def validate_confirmation_token(self, token):
     s = Serializer(current_app.config['SECRET_KEY'])
     try:
       token_obj = self.s.loads(token.encode('utf-8'))
     except:
+      print('couldn\'t generate token')
       return False
     if token_obj['confirm'] != self.id:
       return False

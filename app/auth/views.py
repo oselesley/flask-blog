@@ -4,7 +4,7 @@ from .. import db
 from flask_login import login_user, logout_user, current_user, login_required
 from .forms import LoginForm, SignupForm
 from ..models.User import User
-
+from ..mail.mail import send_mail
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -12,14 +12,17 @@ def login():
   if form.validate_on_submit():
     user = User.query.filter_by(email=form.email.data).first()
 
-    if user or user.verify_password(form.password.data):
-      login_user(user, form.rememberme.data)
-      next = request.args.get('next')
-      if not next or not next.startswith('/'):
-        next = url_for('main.index')
-      return redirect(next)
-    else:
-      flash('Invalid username or password!')
+    if not user: 
+     pass
+    else: 
+      if user.verify_password(form.password.data):
+        login_user(user, form.rememberme.data)
+        next = request.args.get('next')
+        if not next or not next.startswith('/'):
+          next = url_for('main.index')
+        return redirect(next)
+    
+    flash('Invalid username or password!')
 
   return render_template('auth/login.html', form=form)
 
@@ -36,14 +39,21 @@ def signup():
   form = SignupForm()
   if form.validate_on_submit():
     user = User(name=form.name.data, email=form.email.data, password=form.password.data)
-    token = user.generate_confirmation_token()
     db.session.add(user)
     db.session.commit()
-    login_user(user=user)
-    next = request.args.get('next')
-    if not next or not next.startswith('/'):
-      next = url_for('main.index')
-    return redirect(next)
+    token = user.generate_confirmation_token()
+    print(token)
+    send_mail(user.email, 'Confirm your account', 'auth/mail/confirm', user=user, token=token)
+    print('sent')
+    flash('A confirmation email has been sent to your account')
+    return redirect(redirect(url_for('main.index')))
 
   return render_template('auth/signup.html', form=form)
 
+
+@auth.route('/confirm/<token>')
+def confirm():
+  print(request)
+  user = {'name': 'ose'}
+  token = '1233445'
+  return render_template('auth/mail/confirm.html', user=user, token=token )

@@ -39,7 +39,7 @@ class User(UserMixin, db.Model):
   def validate_confirmation_token(self, token):
     s = Serializer(current_app.config['SECRET_KEY'])
     try:
-      token_obj = self.s.loads(token.encode('utf-8'))
+      token_obj = s.loads(token.encode('utf-8'))
     except:
       print('couldn\'t generate token')
       return False

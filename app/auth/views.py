@@ -42,18 +42,23 @@ def signup():
     db.session.add(user)
     db.session.commit()
     token = user.generate_confirmation_token()
-    print(token)
     send_mail(user.email, 'Confirm your account', 'auth/mail/confirm', user=user, token=token)
     print('sent')
     flash('A confirmation email has been sent to your account')
-    return redirect(redirect(url_for('main.index')))
+    return redirect(url_for('auth.login'))
 
   return render_template('auth/signup.html', form=form)
 
 
 @auth.route('/confirm/<token>')
-def confirm():
-  print(request)
-  user = {'name': 'ose'}
-  token = '1233445'
-  return render_template('auth/mail/confirm.html', user=user, token=token )
+def confirm(token):
+  print(token)
+  if current_user.confirmed:
+    return redirect(url_for('main.index'))
+  if current_user.validate_confirmation_token(token):
+    flash('Hello {}!, your account has been confirmed!'.format(current_user.name))
+    return redirect(url_for('main.index'))
+  else:
+    flash('The token is either invalid or has expired')
+    return redirect(url_for('auth.login'))
+

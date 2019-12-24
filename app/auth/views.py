@@ -51,6 +51,7 @@ def signup():
 
 
 @auth.route('/confirm/<token>')
+@login_required
 def confirm(token):
   print(token)
   if current_user.confirmed:
@@ -62,3 +63,20 @@ def confirm(token):
     flash('The token is either invalid or has expired')
     return redirect(url_for('auth.login'))
 
+@auth.before_app_request
+def before_request():
+  if current_user.is_authenticated and not current_user.confirmed and request.blueprint !='auth' and request.endpoint != 'static':
+    return redirect(url_for('auth.unconfirmed'))
+
+@auth.route('/unconfirmed')
+def unconfirmed():
+  if current_user.is_anonymous or current_user.confirmed:
+    return redirect('main.index')
+  return render_template('auth/mail/unconfirmed.html')
+
+@auth.route('/sendmail')
+def sendmail():
+  token = current_user.generate_confirmation_token()
+  send_mail(current_user.email, 'Confirm Your account', 'auth/mail/confirm', user=current_user, token=token)
+  flash('A confirmation mail has been sent to your account')
+  return redirect(url_for('auth.unconfirmed'))

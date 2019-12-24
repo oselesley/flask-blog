@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+  <div class='container'>
+  <h1 class='display-4 mt-5'>Hello {% if current_user.is_authenticated %} {{current_user.name}}!{% else %}Stranger!{% endif %}</h1>
+  <h2 class='lead mb-4' style='font-weight: 400 !important;'>You have not confirmed your account yet!<h2>
+  <p class='lead' style='font-size: 0.9rem !important;'>In other to access this site, you'll need to confirm your account. Check your inbox, you should have recieved a mail with a confirmation link</p>
+  <p class='lead' style='font-size: 0.9rem !important;'>Need another confirmation link? &nbsp; <a href="{{url_for('auth.sendmail')}}">Click Here</a></p>
+</div>
+{% endblock  %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% block title %}
+  {{super()}} - Edit Post
+{% endblock  %}
+
+{% block page_content %}
+  <div class='container'> 
+    <h2 class='display-4 mt-5'>Edit Post</h2>
+    <hr />
+    {{wtf.quick_form(form)}}
+  </div>
+{% endblock  %}
+
+{% block scripts %}
+  {{super()}}
+  {{pagedown.include_pagedown()}}
+{% endblock  %}

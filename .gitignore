@@ -1,0 +1,4 @@
+venv
+.py
+config.txt
+postgresql_query.txt

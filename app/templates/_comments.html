@@ -1,0 +1,33 @@
+  <ul class='list-group list-group-flush'>
+        {% for comment in comments  %}
+                <li class='list-group-item' id='comment-{{comment.id}}'> 
+                  
+                   <div>
+                        <div class='row'>
+                          <div class='col-sm-1'>
+                            <a href="{{url_for('main.users', username=comment.author.username)}}"><img class='rounded' src="{{comment.author.gravatar(size='50')}}" alt='{{comment.author.username}}-profile-pic' /> </a>
+                          </div>
+
+                          <div class='col-sm-10 ml-2'>
+                             <div class='d-flex flex-column'>
+                             <div> 
+                        
+                              <em class='lead float-right' style='font-size:0.7rem !important;'>by <a class='' href="{{url_for("main.users", username=comment.author.username)}}">{{comment.author.username}}</a> {% if comment.edited %}, last edited {{moment(comment.last_edited).fromNow()}} {% else %} {{moment(comment.timestamp).fromNow()}}{% endif %}</em>
+                             <div>
+                                <span style='font-size: 0.9rem; color: #444'>{% if comment.body_html%}{{comment.body_html | safe }}{% else %}{{comment.body}}{% endif %}</span>
+                                
+                              </div>
+
+                              <a class='badge badge-secondary px-1 float-right ml-1' href="{{url_for('main.upvote', id=comment.id)}}">&#x25b2; <span class='badge badge-light'>{% if not comment.upvote %}0 {% else %} {{comment.upvote}} {% endif %}</span></a>
+
+                              <a class='badge badge-secondary px-1 float-right' href="{{url_for('main.downvote', id=comment.id)}}">&#9660; <span class='badge badge-light'>{% if not comment.downvote %}0 {% else %} {{comment.downvote}} {% endif %}</span></a>
+
+                              {% if current_user.is_admin() %}<a class='badge badge-danger px-3 float-right mr-1' href="{{url_for('main.edit_comment', id=comment.id)}}">Modify [Admin]</a>{% elif current_user == post.author %}<a class='badge badge-primary px-3 py-1 float-right mr-1' href="{{url_for('main.edit_comment', id=commment.id)}}">Modify</a>{% endif %} 
+                              </div>
+
+
+                        </div>
+                   </div>
+                </li>
+                {% endfor %}
+</ul>

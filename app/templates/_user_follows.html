@@ -1,0 +1,7 @@
+  <ul class='list-group list-group-flush'>
+    <li class='list-group-item'>
+      <a href="{{url_for('main.users', username=userObj['user'].username)}}"><img width='50' src="{{userObj['user'].gravatar()}}" /> <span class='ml-2'>{{userObj['user'].name}}</span></a>
+
+       <em class='float-right mt-3' style='font-size: 0.7rem; color: #555;'> {{moment(userObj['timestamp']).fromNow()}}</em>
+    </li>
+  </ul>

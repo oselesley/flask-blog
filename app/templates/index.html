@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% import '_macros.html' as macros %}
+
+
+{% block page_content %}
+   <h1 class='page-header mt-5'> {{super()}} Hello, {% if current_user.is_authenticated %} {{current_user.name | title }} {% else %} Stranger {% endif %} </h1>
+   <h2 class="display-4 mb-5" style='font-size: 1.1rem; margin-bottom: 1rem'>{% if not known %}PLeased to meet you {% else %} Happy to meet you again {{name}}{% endif %}</h2>
+       
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link {% if not show_followed %}active {% else %} {% endif %}" href="{{url_for('main.all')}}">All</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if show_followed %}active {% else %} {% endif %} " href="{{url_for('main.followed_posts')}}">Followed</a>
+            </li>
+        </ul>
+        <div class='row'>
+          <div class='col-sm-8'>
+              {% include '_posts.html' %}
+        <a class='btn btn-outline-primary mt-5' href="{{url_for("main.new_post")}}">New Post</a>
+        <br />
+        <br />
+        {{macros.pagination_widget(pagination, 'main.index')}}
+        <br />
+        <br />
+          </div>
+        </div>
+{% endblock %}
+
+
+

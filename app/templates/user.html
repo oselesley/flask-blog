@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% import '_macros.html' as macros %}
+
+{% block title %}
+{{super()}} - {{user.name}}
+{% endblock  %}
+
+{% block page_content %}
+    <div class='page_header mt-5'>
+        <h1 class='display-4'>{{user.name | capitalize}}</h1>
+
+        <hr />
+        <div class='row mt-5'>
+        <div class='col-sm-4'>
+            <img class='img-rounded profile-thumbnail' src='{{user.gravatar(size=256)}}' />
+        </div>
+        
+        <div class='col-sm-6'>
+           
+        {% if current_user.name or current_user.location %}
+            {% if user.username %}<h1 style='font-family:arial;'>{{user.username | capitalize }}</h1>{% endif %}
+                {% if user.location %}
+                    From <a href="http://maps.google.com/?q={{ user.location }}">
+                            {{ user.location }}
+                        </a>
+                {% endif %}
+            {% endif %}
+
+        {% if current_user.is_admin %}
+            <p><a href='mailto:{{user.email}}'>{{user.email}}</a></p>
+        {% endif %}
+
+        {% if current_user.about_me %}<p>{{user.about_me}}</p>{% endif %}
+        <p>
+            <p style='margin-bottom: 0.3rem;'>
+                <em class='lead' style='font-size: 0.9rem;'>Member Since {{moment(user.member_since).format('L')}}</em>
+            </p>
+            <p style='margin-bottom: 1rem;'>
+                <em class='lead' style='font-size: 0.9rem;'>Last Seen {{moment(user.last_seen).fromNow()}}</em>
+            </p>
+            {{user.posts.count()}} blog posts
+            <br class='mb-2' />
+            {% if current_user.is_admin() %}
+                <a class='badge badge-danger px-3 py-2' href='{{url_for('main.edit_profile_admin', id=user.id)}}'>Edit [Admin]</a>
+            {% elif user == current_user %}
+                 <a class='badge badge-success px-3 py-2' href='{{url_for('main.edit_profile', username=current_user.username)}}'>Edit</a>
+            {% endif %} 
+            {% if not user == current_user and user.can(Permission.FOLLOW) %}
+
+              {% if current_user.is_following(user) %}
+              <a class='badge badge-primary px-3 py-2' href='{{url_for('main.unfollow', id=user.id)}}'>Unfollow</a>
+              {% else %}
+                <a class='badge badge-primary px-3 py-2' href='{{url_for('main.follow', id=user.id)}}'>Follow</a>
+              {% endif %}
+              <br />
+            {% endif %}
+            <br class='mb-3' />
+              Following: &nbsp;<a class='badge badge-secondary' href='{{url_for('main.followed', id=user.id)}}'> {{user.followed.count()}}</a> |
+              Followed By: &nbsp;<a class='badge badge-secondary' href='{{url_for('main.followers', id=user.id)}}'> {{user.follower.count()}}</a>
+              {% if user != current_user and user.is_following(current_user) %}
+                <span class='badge badge-primary'> Follows you</span>
+              {% endif %}
+        </p>
+
+        </div>
+      </div>
+       
+
+       <div class='mt-5 w-75 ml-5'>
+          <h4 class='lead mt-1' style='font-size: 1.4rem;'>{{user.username | capitalize}}'s Posts</h4>
+        <ul class='list-group list-group-flush'>
+          {% for post in posts %}
+                <li class='list-group-item'> 
+                   <div>
+                        <div class='row'>
+
+                          <div class='col-sm-11'>
+                             <div class='d-flex flex-column'>
+                             <div > 
+                              <h5 class='d-inline-block' style='font-family: arial;'>
+                              <a style='text-decoration: none; color: #555;' href='{{url_for('main.post', id=post.id)}}'>{{post.title}}</a>
+                              </h5>
+                              <em class='lead float-right' style='font-size:0.7rem !important;'> posted {{moment(post.timestamp).fromNow()}}</em>
+                             </div>
+                        <span style='font-size: 0.9rem; color: #444'>{{post.body[:200]}}...</span>
+                        
+                    </div>
+                          </div>
+
+
+                        </div>
+                   </div>
+                </li>
+            {% endfor %}
+            </ul>
+            <br class='mb-1' />
+            {{macros.pagination_widget(pagination, endpoint, username=user.username)}}
+       </div>
+    </div>
+    <br />
+    <br />
+    <br />
+    <br />
+{% endblock  %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% import '_macros.html' as macros %}
+
+{% block title %}
+  {{super()}} - {% if followed %}Followed {% else %} Followers {% endif %}
+{% endblock  %}
+
+{% block page_content %}
+  <div class='container'>
+    <h1 class='display-4 mt-5'>{% if followed %}Following {% else %} Followed by{% endif %}</h1>
+    <hr />
+      <div class='row mt-5'>
+        <div class='col-6'>
+            {% if followed %}
+              {% for userObj in followed %}
+                {% include '_user_follows.html' %}
+              {% endfor %}
+            {% else %}
+              {% for userObj in followers %}
+                {% include '_user_follows.html' %}
+              {% endfor %}
+          {% endif %}
+          <div class='ml-3 mt-3'>
+          {{macros.pagination_widget(pagination, endpoint, id=user.id)}}
+          </div>
+        </div>
+      </div>
+  </div>
+{% endblock  %}

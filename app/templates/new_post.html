@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}
+{{super()}} - NewPost
+{% endblock  %}
+
+{% block head %}
+{{super()}}
+{{ pagedown.html_head() }}
+{% endblock  %}
+
+{% block page_content %}
+  <div class='container'>
+    <h1 class='display-4 mt-5'>New Post</h1>
+    <hr />
+    <div class='mt-5'>
+      {% if current_user.can(Permission.WRITE) %}
+        {{wtf.quick_form(form)}}
+      {% endif %}
+    </div>
+  </div>
+{% endblock  %}
+
+
+
+{% block scripts %}
+  {{super()}}
+  {{pagedown.include_pagedown()}}
+{% endblock  %}

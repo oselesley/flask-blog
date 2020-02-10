@@ -1,0 +1,29 @@
+
+            {% for post in posts  %}
+              <ul class='list-group list-group-flush'>
+                <li class='list-group-item'> 
+                  
+                   <div>
+                        <div class='row'>
+                          <div class='col-sm-1'>
+                            <a href="{{url_for('main.users', username=post.author.username)}}"><img class='rounded' src="{{post.author.gravatar(size='50')}}" alt='{{post.author.username}}-profile-pic' /> </a>
+                          </div>
+
+                          <div class='col-sm-10 ml-2'>
+                             <div class='d-flex flex-column'>
+                             <div> 
+                              <h5 class='d-inline-block' style='font-family: arial;'><a href="{{url_for('main.post', id=post.id)}}" class='d-block' style='text-decoration:none !important; color:#444 !important'>{{post.title}} </a></h5>
+                              <em class='lead float-right' style='font-size:0.7rem !important;'>by <a class='' href="{{url_for("main.users", username=post.author.username)}}">{{post.author.username}}</a> {% if post.edited %}, last edited {{moment(post.last_edited).fromNow()}} {% else %}{{moment(post.timestamp).fromNow()}}{% endif %}</em>
+                             <div>
+                                <span style='font-size: 0.9rem; color: #444'>{% if post.body_html%}{{post.body_html[:200] | safe }}{% else %}{{post.body[:200]}}{% endif %}...</span>
+                                
+                              </div>
+                              </div>
+
+
+                        </div>
+                   </div>
+                </li>
+              </ul>
+                {% endfor %}
+           
